@@ -16,6 +16,7 @@ public class OSMonitorTest {
 	private final static OSMonitor monitor  = new OSMonitor();
 	
 	
+	
 	@Test
 	public void getSystemNameTest(){
 		LOG.info(monitor.getSystemName());
