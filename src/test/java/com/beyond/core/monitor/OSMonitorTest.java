@@ -17,6 +17,6 @@ public class OSMonitorTest {
 	
 	@Test
 	public void getSystemNameTest(){
-		LOG.info(monitor.getPathSeparator());
+		LOG.info(monitor.getSystemName());
 	}
 }
