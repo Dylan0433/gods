@@ -8,11 +8,11 @@ import org.slf4j.LoggerFactory;
 /**
  * create the log
  * @author Dylan
- * @time ионГ9:30:41
+ * @time О©╫О©╫О©╫О©╫9:30:41
  */
-public class LogProducer{
+public class LogFactory{
 
-	private LogProducer(){}
+	private LogFactory(){}
 	
 	/**
 	 * 

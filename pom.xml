@@ -1,9 +1,10 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>com.beyond</groupId>
-  <artifactId>gods</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  	<properties>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.beyond</groupId>
+	<artifactId>gods</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java-version>1.6</java-version>
 		<org.springframework-version>3.1.0.RELEASE</org.springframework-version>
@@ -11,13 +12,19 @@
 		<org.slf4j-version>1.5.10</org.slf4j-version>
 		<org.apache.shiro-version>1.1.0</org.apache.shiro-version>
 	</properties>
-	
-   <dependencies>
-  
-  		<dependency>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.1</version>
+		</dependency>
+
+		<dependency>
 			<groupId>commons-lang</groupId>
 			<artifactId>commons-lang</artifactId>
-			<version>2.3</version>
+			<version>2.6</version>
 		</dependency>
 
 		<dependency>
@@ -25,7 +32,7 @@
 			<artifactId>commons-beanutils</artifactId>
 			<version>1.8.3</version>
 		</dependency>
-		
+
 		<!-- Test -->
 		<dependency>
 			<groupId>junit</groupId>
@@ -33,7 +40,7 @@
 			<version>4.8.1</version>
 			<scope>test</scope>
 		</dependency>
-		
+
 		<!-- Logging -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -58,10 +65,30 @@
 			<version>1.2.15</version>
 			<scope>runtime</scope>
 		</dependency>
-		
-  </dependencies>
-  
-  <repositories>
+
+		<!-- xstream -->
+		<dependency>
+			<groupId>com.thoughtworks.xstream</groupId>
+			<artifactId>xstream</artifactId>
+			<version>1.4.3</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.codehaus.jettison</groupId>
+			<artifactId>jettison</artifactId>
+			<version>1.3.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis</artifactId>
+			<version>3.1.1</version>
+		</dependency>
+
+
+	</dependencies>
+
+	<repositories>
 		<!-- For testing against latest Spring snapshots -->
 		<repository>
 			<id>org.springframework.maven.snapshot</id>
@@ -85,11 +112,6 @@
 				<updatePolicy>never</updatePolicy>
 				<enabled>false</enabled>
 			</snapshots>
-		</repository>
-
-		<repository>
-			<id>youboy</id>
-			<url>http://192.168.3.239:8081/nexus/content/repositories/thirdparty</url>
 		</repository>
 
 		<repository>
@@ -139,7 +161,7 @@
 					</execution>
 				</executions>
 			</plugin>
-			
+
 			<plugin>
 				<artifactId>maven-source-plugin</artifactId>
 				<version>2.1</version>
@@ -169,5 +191,5 @@
 			</plugin>
 		</plugins>
 	</build>
-  
+
 </project>

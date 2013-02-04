@@ -5,17 +5,17 @@ import org.slf4j.Logger;
 
 public class DocumentConverterTest {
 
-	private final static Logger LOG = LogProducer.getLogger(DocumentConverterTest.class);
+	private final static Logger LOG = LogFactory.getLogger(DocumentConverterTest.class);
 	@Test
 	public void test(){
 		
-		User u = User.createUser("ÕÅÈý", "1234");
+		User u = User.createUser("ï¿½ï¿½ï¿½ï¿½", "1234");
 		
 		String xml = DocumentConverter.toXML(u);
 		
 		String json = DocumentConverter.toJson(u);
 		
-		String x = "{\"User\":{\"name\":\"ÕÅÈý\",\"password\":1234}}";
+		String x = "{\"User\":{\"name\":\"ï¿½ï¿½ï¿½ï¿½\",\"password\":1234}}";
 		
 		User user = DocumentConverter.xmlToEntity(x, User.class);
 		
@@ -23,7 +23,7 @@ public class DocumentConverterTest {
 		
 		LOG.info(json);
 		
-		LOG.info("name £º " + user.getName() + " password : " + user.getPassword());
+		LOG.info("name ï¿½ï¿½ " + user.getName() + " password : " + user.getPassword());
 		
 		
 	}
@@ -32,7 +32,7 @@ public class DocumentConverterTest {
 	/**
 	 * inner class
 	 * @author Dylan
-	 * @time ÏÂÎç5:04:44
+	 * @time ï¿½ï¿½ï¿½ï¿½5:04:44
 	 */
 	static class User{
 		
