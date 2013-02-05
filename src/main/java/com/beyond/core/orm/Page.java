@@ -1,6 +1,8 @@
 package com.beyond.core.orm;
 
 import java.io.Serializable;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * 
@@ -17,71 +19,73 @@ public class Page<T> implements Serializable{
 	/**
 	 * the number of very page
 	 */
-	private int pageSize = 0;
+	private int pageSize = 20;
 	
 	/**
 	 * which page we hold now
 	 */
-	private int currentPage = 0;
+	private int currentPage = 1;
 	
 	/**
 	 * 
 	 */
-	private int nextPage = 0;
+	private int totalPages = 0;
 	
 	/**
 	 * 
 	 */
-	private int prePage = 0;
+	private int totalCount=0;
 	
 	/**
 	 * 
 	 */
-	private int totalPage = 0;
-	
-	/**
-	 * 
-	 */
-	private T result = null;
+	private List<T> result = Collections.emptyList();
 
 	public int getPageSize() {
 		return pageSize;
 	}
 
-	public void setPageSize(int pageSize) {
+	public Page<T> setPageSize(int pageSize) {
 		this.pageSize = pageSize;
+		return this;
 	}
 
 	public int getCurrentPage() {
 		return currentPage;
 	}
 
-	public void setCurrentPage(int currentPage) {
+	public Page<T> setCurrentPage(int currentPage) {
 		this.currentPage = currentPage;
+		return this;
 	}
 
 	public int getNextPage() {
-		return nextPage;
-	}
-
-	public void setNextPage(int nextPage) {
-		this.nextPage = nextPage;
+		if(hasNextPage())
+			return ++currentPage;
+		return currentPage;
 	}
 
 	public int getPrePage() {
-		return prePage;
+		if(hasPrePage())
+			return --currentPage;
+		return currentPage;
 	}
 
-	public void setPrePage(int prePage) {
-		this.prePage = prePage;
+	public int getTotalPages() {
+		totalPages = totalCount/pageSize;
+		if((totalCount%pageSize)>0)
+			++totalPages;
+		return totalPages;
 	}
-
-	public int getTotalPage() {
-		return totalPage;
+	
+	public  int getFirstPage(){
+		currentPage=1;
+		return currentPage;
 	}
-
-	public void setTotalPage(int totalPage) {
-		this.totalPage = totalPage;
+	
+	public int getLastPage(){
+		currentPage=getTotalPages();
+		return currentPage;
 	}
 	
 	public boolean hasPrePage(){
@@ -89,19 +93,27 @@ public class Page<T> implements Serializable{
 	}
 	
 	public boolean hasNextPage(){
-		return totalPage>currentPage;
-	}
-
-	public void calculateTotalPage(int allCount){
-		totalPage = allCount/pageSize;
+		return totalPages>currentPage;
 	}
 	
-	public T getResult() {
+	public int getTotalCount() {
+		return totalCount;
+	}
+
+	public Page<T> setTotalCount(int totalCount) {
+		this.totalCount = totalCount;
+		return this;
+	}
+
+
+	public List<T> getResult() {
 		return result;
 	}
 
-	public void setResult(T result) {
+	public Page<T> setResult(List<T> result) {
 		this.result = result;
+		return this;
 	}
+	
 	
 }

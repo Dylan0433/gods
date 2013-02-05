@@ -5,7 +5,7 @@ import org.slf4j.Logger;
 
 public class DocumentConverterTest {
 
-	private final static Logger LOG = LogFactory.getLogger(DocumentConverterTest.class);
+	private final static Logger LOG = LogFactory.createLogger(DocumentConverterTest.class);
 	@Test
 	public void test(){
 		

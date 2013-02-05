@@ -12,7 +12,7 @@ import com.beyond.core.util.LogFactory;
  */
 public class OSMonitorTest {
 
-	private final static Logger LOG = LogFactory.getLogger(OSMonitorTest.class);
+	private final static Logger LOG = LogFactory.createLogger(OSMonitorTest.class);
 	private final static OSMonitor monitor  = new OSMonitor();
 	
 	

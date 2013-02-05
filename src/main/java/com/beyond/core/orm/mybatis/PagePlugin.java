@@ -1,19 +1,27 @@
 package com.beyond.core.orm.mybatis;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Properties;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.ibatis.executor.parameter.DefaultParameterHandler;
+import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.plugin.Invocation;
 import org.apache.ibatis.plugin.Plugin;
+import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 
+import com.beyond.core.exception.DatabaseException;
 import com.beyond.core.orm.Page;
 import com.beyond.core.orm.mybatis.dialect.Dialect;
 import com.beyond.core.util.LogFactory;
-import com.beyond.core.util.ReflectionHelper;
 
 /**
  * 
@@ -22,7 +30,7 @@ import com.beyond.core.util.ReflectionHelper;
  */
 public class PagePlugin implements Interceptor {
 	
-	protected final static Logger LOG = LogFactory.getLogger(PagePlugin.class);
+	protected final static Logger LOG = LogFactory.createLogger(PagePlugin.class);
 	
 	protected Dialect DIALECT = null;
 	
@@ -49,7 +57,26 @@ public class PagePlugin implements Interceptor {
 			if(!isPage(parameterObj)){
 				throw new IllegalStateException("parameter must be page instance");
 			}
+			
+			Connection connection = MybatisHelper.getConnection(statement);
+			
+			int totalCount = getTotalCount(sql,connection,statement,parameterObj,boundSql);
 				
+			Page<?> page = (Page<?>) parameterObj;
+			page.setTotalCount(totalCount);
+			
+			String pageSql = MybatisHelper.buildPageSql(sql,page,DIALECT);
+			invocation.getArgs()[2] = new RowBounds(RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
+			final BoundSql bSql = MybatisHelper.newBoundSql(statement,pageSql,boundSql);
+			statement = MybatisHelper.copyMappedStatement(statement,new SqlSource(){
+
+				@Override
+				public BoundSql getBoundSql(Object parameterObject) {
+					return bSql;
+				}
+				
+			});
+			invocation.getArgs()[0] = statement;
 			
 		}
 		
@@ -64,25 +91,54 @@ public class PagePlugin implements Interceptor {
 	@Override
 	public void setProperties(Properties properties) {
 		
-		String dialectName = properties.getProperty("DIALECT");
-		if(StringUtils.isBlank(dialectName)){
-			LOG.error("the 'DIALECT' property of plugin must be declare");
-			throw new IllegalStateException("the 'DIALECT' property of plugin must be declare");
+		this.DIALECT = MybatisHelper.getDialect(properties);
+		
+		this.SQL_REGULAR = MybatisHelper.getSqlRegular(properties);
+		
+	}
+	
+
+	/**
+	 * get all count peple search
+	 * @param sql
+	 * @param connection
+	 * @param statement
+	 * @param parameterObj
+	 * @param boundSql
+	 * @return
+	 */
+	public int getTotalCount(final String sql,final Connection connection,
+									final MappedStatement statement,
+									final Object parameterObj,final BoundSql boundSql) {
+		
+		
+		final String totalCountSql = "select count(1) from (" + sql + ") as total_count";
+		
+		PreparedStatement pStatement = null;
+		ResultSet rs = null;
+		
+		try {
+			pStatement = connection.prepareStatement(totalCountSql);
+			
+			BoundSql bSql = new BoundSql(statement.getConfiguration(), 
+										 totalCountSql, boundSql.getParameterMappings(), parameterObj);
+			
+			ParameterHandler handler = new DefaultParameterHandler(statement, parameterObj, bSql);
+			
+			handler.setParameters(pStatement);
+			
+			rs = pStatement.executeQuery();
+			if(rs.next()){
+				return rs.getInt(1);
+			}
+			
+		} catch (SQLException e) {
+			throw new DatabaseException(e.getMessage());
+		}finally{
+			MybatisHelper.freeResource(rs, pStatement);
 		}
 		
-		Dialect dialect = (Dialect) ReflectionHelper.newInstance(dialectName);
-		if(null == dialect){
-			LOG.error("the Dialect init fail,please check the dialect class exist or not");
-			throw new IllegalStateException("the Dialect init fail,please check the dialect class exist or not");
-		}
-		this.DIALECT = dialect;
-		
-		SQL_REGULAR = properties.getProperty("SQL_REGULAR");
-		if(StringUtils.isBlank(SQL_REGULAR)){
-			LOG.error("the 'SQL_REGULAR' property of plugin must be declare");
-			throw new IllegalStateException("the 'SQL_REGULAR' property of plugin must be declare");
-		}
-		
+		return 0;
 	}
 	
 	/**

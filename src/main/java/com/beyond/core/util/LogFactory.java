@@ -19,7 +19,7 @@ public class LogFactory{
 	 * @param clazz
 	 * @return
 	 */
-	public static <T> Logger getLogger(Class<T> clazz){
+	public static <T> Logger createLogger(Class<T> clazz){
 		
 		return LoggerFactory.getLogger(clazz);
 	}
