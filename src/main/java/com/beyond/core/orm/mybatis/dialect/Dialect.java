@@ -1,4 +1,4 @@
-package com.beyond.core.orm.dialect;
+package com.beyond.core.orm.mybatis.dialect;
 
 /**
  * 

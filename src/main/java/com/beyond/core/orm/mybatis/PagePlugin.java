@@ -1,4 +1,4 @@
-package com.beyond.core.orm;
+package com.beyond.core.orm.mybatis;
 
 import java.util.Properties;
 
@@ -10,7 +10,8 @@ import org.apache.ibatis.plugin.Invocation;
 import org.apache.ibatis.plugin.Plugin;
 import org.slf4j.Logger;
 
-import com.beyond.core.orm.dialect.Dialect;
+import com.beyond.core.orm.Page;
+import com.beyond.core.orm.mybatis.dialect.Dialect;
 import com.beyond.core.util.LogFactory;
 import com.beyond.core.util.ReflectionHelper;
 
