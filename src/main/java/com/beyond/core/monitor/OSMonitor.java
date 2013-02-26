@@ -2,13 +2,13 @@ package com.beyond.core.monitor;
 
 import java.util.Properties;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * the class of system
  * through this class,we can get the info of system
  * @author Dylan
- * @time ионГ8:53:41
+ * @time О©╫О©╫О©╫О©╫8:53:41
  */
 public class OSMonitor {
 
