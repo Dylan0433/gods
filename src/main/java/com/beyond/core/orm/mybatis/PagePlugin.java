@@ -7,14 +7,18 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.parameter.DefaultParameterHandler;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.plugin.Interceptor;
+import org.apache.ibatis.plugin.Intercepts;
 import org.apache.ibatis.plugin.Invocation;
 import org.apache.ibatis.plugin.Plugin;
+import org.apache.ibatis.plugin.Signature;
+import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 
@@ -28,6 +32,8 @@ import com.beyond.core.util.LogFactory;
  * @author Dylan
  * @time 下午4:00:37
  */
+@Intercepts({@Signature(type = Executor.class, method = "query",
+args = {MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class})})
 public class PagePlugin implements Interceptor {
 	
 	protected final static Logger LOG = LogFactory.createLogger(PagePlugin.class);
@@ -40,7 +46,7 @@ public class PagePlugin implements Interceptor {
 	public Object intercept(Invocation invocation) throws Throwable {
 		
 		MappedStatement statement = (MappedStatement) invocation.getArgs()[0];
-		if(SQL_REGULAR.matches(statement.getId())){
+		if(statement.getId().matches(SQL_REGULAR)){
 			if(LOG.isDebugEnabled()){
 				LOG.info("page is begin...");
 			}
