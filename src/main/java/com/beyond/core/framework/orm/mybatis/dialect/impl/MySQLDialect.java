@@ -1,6 +1,6 @@
-package com.beyond.core.orm.mybatis.dialect.impl;
+package com.beyond.core.framework.orm.mybatis.dialect.impl;
 
-import com.beyond.core.orm.mybatis.dialect.Dialect;
+import com.beyond.core.framework.orm.mybatis.dialect.Dialect;
 
 /**
  * 

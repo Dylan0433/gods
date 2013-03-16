@@ -1,4 +1,4 @@
-package com.beyond.core.orm.mybatis;
+package com.beyond.core.framework.orm.mybatis;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -23,8 +23,8 @@ import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 
 import com.beyond.core.exception.DatabaseException;
-import com.beyond.core.orm.Page;
-import com.beyond.core.orm.mybatis.dialect.Dialect;
+import com.beyond.core.framework.orm.Page;
+import com.beyond.core.framework.orm.mybatis.dialect.Dialect;
 import com.beyond.core.util.LogFactory;
 
 /**

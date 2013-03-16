@@ -1,4 +1,4 @@
-package com.beyond.core.spring;
+package com.beyond.core.framework.spring;
 
 import org.apache.commons.lang3.Validate;
 import org.springframework.beans.BeansException;

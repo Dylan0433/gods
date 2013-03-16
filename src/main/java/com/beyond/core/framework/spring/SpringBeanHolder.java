@@ -1,4 +1,4 @@
-package com.beyond.core.spring;
+package com.beyond.core.framework.spring;
 
 /**
  * 

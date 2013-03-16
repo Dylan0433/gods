@@ -1,4 +1,4 @@
-package com.beyond.core.spring;
+package com.beyond.core.framework.spring;
 
 import java.util.HashMap;
 import java.util.Map;

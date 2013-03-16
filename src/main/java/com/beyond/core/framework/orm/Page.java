@@ -1,4 +1,4 @@
-package com.beyond.core.orm;
+package com.beyond.core.framework.orm;
 
 import java.io.Serializable;
 import java.util.Collections;
