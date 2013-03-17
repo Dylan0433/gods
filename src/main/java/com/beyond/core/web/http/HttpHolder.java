@@ -57,11 +57,12 @@ public class HttpHolder {
 	 * @param headers
 	 * @return
 	 */
-	public HttpMethod executeGet(String url,Map<String,String> headers,Map<String,Object> params){
+	public HttpMethod executeGet(String url,Map<String,String> headers,Map<String,String> params){
 		Validate.notEmpty(url);
 		GetMethod get = new GetMethod(url);
 		initHeader(get, headers);
-		get.setParams(createParams(params));
+		get.setQueryString(createNameValuePair(params));
+	//	get.setParams(createParams(params));
 		return execute(get);
 	}
 	
@@ -71,7 +72,7 @@ public class HttpHolder {
 	 * @return
 	 */
 	public HttpMethod executeGet(String url){
-		return executeGet(url, new HashMap<String, String>(), new HashMap<String, Object>());
+		return executeGet(url, new HashMap<String, String>(), new HashMap<String, String>());
 	}
 	
 	/**
@@ -82,10 +83,11 @@ public class HttpHolder {
 	 * @param clazz
 	 * @return
 	 */
-	public <T> T executeGet(String url,Map<String,String> headers,Map<String,Object> params,Class<T> clazz){
+	public <T> T executeGet(String url,Map<String,String> headers,Map<String,String> params,Class<T> clazz){
 		GetMethod get = new GetMethod(url);
 		initHeader(get, headers);
-		get.setParams(createParams(params));
+		get.setQueryString(createNameValuePair(params));
+	//	get.setParams(createParams(params));
 		return execute(get, clazz);
 	}
 	
@@ -96,7 +98,7 @@ public class HttpHolder {
 	 * @return
 	 */
 	public <T> T executeGet(String url,Class<T> clazz){
-		return executeGet(url, new HashMap<String, String>(), new HashMap<String, Object>(), clazz);
+		return executeGet(url, new HashMap<String, String>(), new HashMap<String, String>(), clazz);
 	}
 	/**
 	 * 

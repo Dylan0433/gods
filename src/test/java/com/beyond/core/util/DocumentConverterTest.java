@@ -3,11 +3,11 @@ package com.beyond.core.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.beanutils.BeanUtils;
-import org.apache.ibatis.type.Alias;
 import org.junit.Test;
 import org.slf4j.Logger;
 
+import com.beyond.core.web.express.Data;
+import com.beyond.core.web.express.ResponseBody;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 public class DocumentConverterTest {
@@ -57,6 +57,41 @@ public class DocumentConverterTest {
 		Father f2 = DocumentConverter.xmlToEntity(xml, Father.class);
 	}
 	
+	@Test
+	public void test3(){
+		Data d1  = new Data();
+		d1.setContext("aa");
+		d1.setTime("2013-02-06 11:38:00");
+		Data d2  = new Data();
+		d2.setContext("bb");
+		d2.setTime("2013-03-06 11:38:00");
+		List<Data> data = new ArrayList<Data>();
+		data.add(d1);
+		data.add(d2);
+		/*Map<String,String> m1 = new HashMap<String,String>();
+		m1.put("context", "aa");
+		m1.put("time", "2013-03-06 11:38:00");
+		Map<String,String> m2 = new HashMap<String,String>();
+		m2.put("context", "bb");
+		m2.put("time", "2013-01-06 11:38:00");
+		List<Map<String,String>> data = new ArrayList<Map<String,String>>();
+		data.add(m2);
+		data.add(m1);*/
+		ResponseBody body = new ResponseBody();
+		body.setCom("ems");
+		body.setCondition("F00");
+		body.setData(data);
+		body.setIscheck(1);
+		body.setMessage("ok");
+		body.setNu("1311412421");
+		body.setState(1);
+		body.setStatus(3);
+		
+		String xml = DocumentConverter.toXML(body);
+		System.out.println(xml);
+		String json = DocumentConverter.toJson(body);
+		System.out.println(json);
+	}
 }
 
 

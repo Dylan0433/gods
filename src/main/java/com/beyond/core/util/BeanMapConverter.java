@@ -44,8 +44,8 @@ public class BeanMapConverter {
 	 * @param bean 实体bean
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	public static Map<String,Object> beanToMap(Object bean){
+	@SuppressWarnings("rawtypes")
+	public static Map beanToMap(Object bean){
 		try {
 			return BeanUtils.describe(bean);
 		} catch (Exception e) {
@@ -53,4 +53,5 @@ public class BeanMapConverter {
 		}
 			
 	}
+	
 }
