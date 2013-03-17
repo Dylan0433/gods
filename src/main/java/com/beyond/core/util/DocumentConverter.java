@@ -7,7 +7,7 @@ import com.thoughtworks.xstream.io.xml.DomDriver;
 /**
  * the document include json,xml and so on
  * @author Dylan
- * @time обнГ4:26:24
+ * @time О©╫О©╫О©╫О©╫4:26:24
  */
 public class DocumentConverter {
 

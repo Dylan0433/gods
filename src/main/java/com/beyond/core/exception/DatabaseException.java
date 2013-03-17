@@ -1,7 +1,7 @@
 package com.beyond.core.exception;
 
 /**
- * 
+ * 数据库异常
  * @author Dylan
  * @time 上午10:17:49
  */
