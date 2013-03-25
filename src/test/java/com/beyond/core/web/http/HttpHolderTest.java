@@ -7,8 +7,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.HttpMethod;
-import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.junit.Test;
 
 /**
@@ -46,6 +46,23 @@ public class HttpHolderTest {
 		
 	}
 	
+	@Test
+	public void test2() throws IOException{
+		HttpHolder client = HttpHolder.instance();
+		/*Cookie cookie = new Cookie();
+		cookie.setDomain("localhost");
+		cookie.setPath("/");
+		cookie.setName("name");
+		cookie.setValue("张三");
+		client.addCookie(cookie);*/
+		HttpMethod result = client.executePost(url);
+		System.out.println(result.getResponseBodyAsString());
+		Cookie [] cookies = client.getCookie();
+		for(Cookie c : cookies){
+			System.out.println(c.getName() + " : " + c.getValue());
+		}
+		client.addCookie(cookies[0]);
+	}
 	class User{
 		
 		private String name;

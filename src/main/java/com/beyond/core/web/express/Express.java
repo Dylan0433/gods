@@ -18,19 +18,50 @@ import com.beyond.core.web.http.HttpHolder;
  */
 public class Express {
 
-	private String url = "http://api.kuaidi100.com/api";
+	private String url = "http://api.kuaidi100.com/api?";
+	private String key = "3b47ce87f03b5d6b";
 	
+	/**
+	 * 得到快递信息
+	 * @param express 快递公司代号
+	 * @param nu 快递单号
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public String getExpressInfo(String express,String nu){
+		RequestParams param = new RequestParams();
+		param.setId(key).setCom(express).setNu(nu).setMuti("1").setShow("2").setOrder("desc");
+		Map<String, String> params = BeanMapConverter.beanToMap(param);
+		HttpHolder http = HttpHolder.instance();
+		HttpMethod method = null;
+		try {
+			method = http.executeGet(url, new HashMap<String, String>(), params);
+			return method.getResponseBodyAsString();
+		} catch (IOException e) {
+			throw new RuntimeException(e.getMessage());
+		}finally{
+			http.releaseConnection(method);
+		}
+	}
 	
+	/**
+	 * 得到快递信息
+	 * @param param 请求参数
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")
 	public String getExpressInfo(RequestParams param){
 		
 		Map<String, String> params = BeanMapConverter.beanToMap(param);
-		HttpHolder http = new HttpHolder();
-		HttpMethod method = http.executeGet(url, new HashMap<String, String>(), params);
+		HttpHolder http = HttpHolder.instance();
+		HttpMethod method = null;
 		try {
+			 method = http.executeGet(url, new HashMap<String, String>(), params);
 			return method.getResponseBodyAsString();
 		} catch (IOException e) {
 			throw new RuntimeException(e.getMessage());
+		}finally{
+			http.releaseConnection(method);
 		}
 	}
 }

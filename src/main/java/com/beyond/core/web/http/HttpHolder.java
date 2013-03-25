@@ -9,12 +9,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpConnectionManager;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpMethod;
+import org.apache.commons.httpclient.HttpState;
 import org.apache.commons.httpclient.NameValuePair;
+import org.apache.commons.httpclient.cookie.CookiePolicy;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.params.HttpMethodParams;
@@ -49,6 +52,20 @@ public class HttpHolder {
 		client.setHttpConnectionManager(httpConnectionManager);
 	}
 	
+	/**
+	 * 
+	 * @param cookie
+	 */
+	public void addCookie(Cookie cookie){
+		client.getParams().setCookiePolicy(CookiePolicy.RFC_2109);
+		HttpState initialState = new HttpState();
+		initialState.addCookie(cookie);
+		client.setState(initialState);
+	}
+	
+	public Cookie[] getCookie(){
+		return client.getState().getCookies();
+	}
 	
 	/**
 	 * 
@@ -160,7 +177,9 @@ public class HttpHolder {
 			throw new HttpMethodExecuteException(e.getMessage());
 		} catch (IOException e) {
 			throw new IOCommunicateException(e.getMessage());
-		}
+		}/*finally{
+			releaseConnection(method);
+		}*/
 		return method;
 	}
 	
@@ -179,7 +198,9 @@ public class HttpHolder {
 			json = response.getResponseBodyAsString();
 		} catch (IOException e) {
 			throw new IOCommunicateException(e.getMessage());
-		}
+		}/*finally{
+			releaseConnection(method);
+		}*/
 		return DocumentConverter.jsonToEntity(json, clazz);
 	}
 	
@@ -232,5 +253,11 @@ public class HttpHolder {
 	
 	public static HttpHolder instance(){
 		return new HttpHolder();
+	}
+	
+	public void releaseConnection(HttpMethod method){
+		if(null != method){
+			method.releaseConnection();
+		}
 	}
 }
