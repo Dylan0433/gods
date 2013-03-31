@@ -3,7 +3,11 @@ package com.beyond.core.util;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.lang.reflect.UndeclaredThrowableException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.lang3.Validate;
 
@@ -14,9 +18,9 @@ import org.apache.commons.lang3.Validate;
  * @author Dylan
  * @time 上午10:36:14
  */
-public class ReflectionHelper {
+public class GodHands {
 
-	private ReflectionHelper() {
+	private GodHands() {
 	}
 
 	/**
@@ -65,7 +69,7 @@ public class ReflectionHelper {
 	 *            the name of field we want to get
 	 * @return
 	 */
-	private static Field getAccessibleField(final Object instance, final String fieldName) {
+	public static Field getAccessibleField(final Object instance, final String fieldName) {
 		Validate.notNull(instance, "the parameter of instance can't be null");
 		Validate.notBlank(fieldName, "fieldName can't be blank", new Object[0]);
 
@@ -157,6 +161,23 @@ public class ReflectionHelper {
 			handleReflectionException(e);
 		}
 		return null;
+	}
+	
+	/**
+	 * 
+	 * @param clazz
+	 * @return
+	 */
+	public static  Class<?>[] genericsTypes(Class<?> clazz){
+		Type type = clazz.getGenericSuperclass();
+		List<Class<?>> clazzs = new ArrayList<Class<?>>();
+		if(ParameterizedType.class.isAssignableFrom(type.getClass())){
+			Type [] types = ((ParameterizedType)type).getActualTypeArguments();
+			for(Type t : types){
+				clazzs.add((Class<?>)t);
+			}
+		}
+		return clazzs.toArray(new Class<?>[clazzs.size()]);
 	}
 
 	/**

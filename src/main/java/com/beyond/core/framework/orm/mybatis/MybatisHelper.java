@@ -16,7 +16,7 @@ import com.beyond.core.exception.DatabaseException;
 import com.beyond.core.framework.orm.Page;
 import com.beyond.core.framework.orm.mybatis.dialect.Dialect;
 import com.beyond.core.util.LogFactory;
-import com.beyond.core.util.ReflectionHelper;
+import com.beyond.core.util.GodHands;
 
 /**
  * 
@@ -124,7 +124,7 @@ public class MybatisHelper {
 			throw new IllegalStateException("the 'DIALECT' property of plugin must be declare");
 		}
 		
-		Dialect dialect = (Dialect) ReflectionHelper.newInstance(dialectName);
+		Dialect dialect = (Dialect) GodHands.newInstance(dialectName);
 		if(null == dialect){
 			LOG.error("the Dialect init fail,please check the dialect class exist or not");
 			throw new IllegalStateException("the Dialect init fail,please check the dialect class exist or not");
