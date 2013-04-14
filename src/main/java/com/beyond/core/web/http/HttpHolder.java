@@ -26,7 +26,6 @@ import org.apache.commons.httpclient.methods.PutMethod;
 import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.commons.lang3.Validate;
 
-import com.beyond.core.exception.HttpMethodExecuteException;
 import com.beyond.core.exception.IOCommunicateException;
 import com.beyond.core.util.DocumentConverter;
 
@@ -143,153 +142,6 @@ public class HttpHolder {
 	
 	/**
 	 * 
-	 * @param url
-	 * @param params
-	 * @param headers
-	 * @return
-	 */
-	@Deprecated
-	public HttpMethod executeGet(String url,Map<String,String> headers,Map<String,String> params){
-		Validate.notEmpty(url);
-		GetMethod get = new GetMethod(url);
-		initHeader(get, headers);
-		get.setQueryString(createNameValuePair(params));
-	//	get.setParams(createParams(params));
-		return execute(get);
-	}
-	
-	/**
-	 * 
-	 * @param url
-	 * @return
-	 */
-	@Deprecated
-	public HttpMethod executeGet(String url){
-		return executeGet(url, new HashMap<String, String>(), new HashMap<String, String>());
-	}
-	
-	/**
-	 * 
-	 * @param url
-	 * @param params
-	 * @param headers
-	 * @param clazz
-	 * @return
-	 */
-	@Deprecated
-	public <T> T executeGet(String url,Map<String,String> headers,Map<String,String> params,Class<T> clazz){
-		GetMethod get = new GetMethod(url);
-		initHeader(get, headers);
-		get.setQueryString(createNameValuePair(params));
-	//	get.setParams(createParams(params));
-		return execute(get, clazz);
-	}
-	
-	/**
-	 * 
-	 * @param url
-	 * @param clazz
-	 * @return
-	 */
-	@Deprecated
-	public <T> T executeGet(String url,Class<T> clazz){
-		return executeGet(url, new HashMap<String, String>(), new HashMap<String, String>(), clazz);
-	}
-	/**
-	 * 
-	 * @param url
-	 * @param params
-	 * @param headers
-	 * @return
-	 */
-	@Deprecated
-	public HttpMethod executePost(String url,Map<String,String> headers,Map<String,Object> params){
-		
-		PostMethod post = new PostMethod(url);
-		initHeader(post, headers);
-		post.setParams(createParams(params));
-		return execute(post);
-	}
-	
-	/**
-	 * 
-	 * @param url
-	 * @return
-	 */
-	@Deprecated
-	public HttpMethod executePost(String url){
-		return executePost(url, new HashMap<String, String>(), new HashMap<String, Object>());
-	}
-	
-	/**
-	 * 
-	 * @param url
-	 * @param params
-	 * @param headers
-	 * @param clazz
-	 * @return
-	 */
-	@Deprecated
-	public <T> T executePost(String url,Map<String,String> headers,Map<String,Object> params,Class<T> clazz){
-		PostMethod post = new PostMethod(url);
-		initHeader(post, headers);
-		post.setParams(createParams(params));
-		return execute(post,clazz);
-	}
-	
-	/**
-	 * 
-	 * @param url
-	 * @param clazz
-	 * @return
-	 */
-	@Deprecated
-	public <T> T executePost(String url,Class<T> clazz){
-		return executePost(url,new HashMap<String, String>(),new HashMap<String, Object>(),clazz);
-	}
-	/**
-	 * 执行http请求
-	 * @param method 请求方法
-	 * @return
-	 */
-	@Deprecated
-	public HttpMethod execute(HttpMethod method){
-		try {
-			client.executeMethod(method);
-		} catch (HttpException e) {
-			throw new HttpMethodExecuteException(e.getMessage());
-		} catch (IOException e) {
-			throw new IOCommunicateException(e.getMessage());
-		}/*finally{
-			releaseConnection(method);
-		}*/
-		return method;
-	}
-	
-	
-	/**
-	 * 执行http讲求，并把返回转换成所有希望的对象
-	 * @param method 讲求方法
-	 * @param clazz  要把response转换成的对象类型
-	 * @return
-	 */
-	@Deprecated
-	public <T> T execute(HttpMethod method,Class<T> clazz){
-		
-		HttpMethod response = execute(method);
-		String json = "";
-		try {
-			json = response.getResponseBodyAsString();
-		} catch (IOException e) {
-			throw new IOCommunicateException(e.getMessage());
-		}/*finally{
-			releaseConnection(method);
-		}*/
-		return DocumentConverter.jsonToEntity(json, clazz);
-	}
-	
-	/**
-	 * 
 	 * @param params
 	 * @return
 	 */
@@ -345,7 +197,7 @@ public class HttpHolder {
 		}
 	}
 	
-	static enum Method {
+	public static enum Method {
 
 		GET(new GetMethod()), POST(new PostMethod()), PUT(new PutMethod()), DELETE(new DeleteMethod());
 

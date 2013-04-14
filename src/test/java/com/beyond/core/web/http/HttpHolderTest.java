@@ -43,7 +43,7 @@ public class HttpHolderTest {
 		}*/
 	//	User user = http.executeGet(url, User.class);
 	//	System.out.println(user.getName() + " : " + user.getPassword());
-		User user = http.executePost(url,headers,params, User.class);
+		User user = http.execute(POST,url,headers,params,new HashMap<String,String>(), User.class);
 		System.out.println(user.getName() + " : " + user.getPassword());
 		
 	}
@@ -57,7 +57,7 @@ public class HttpHolderTest {
 		cookie.setName("name");
 		cookie.setValue("张三");
 		client.addCookie(cookie);*/
-		HttpMethod result = client.executePost(url);
+		HttpMethod result = client.execute(POST,url);
 		System.out.println(result.getResponseBodyAsString());
 		Cookie [] cookies = client.getCookie();
 		for(Cookie c : cookies){

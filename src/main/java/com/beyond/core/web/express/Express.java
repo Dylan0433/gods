@@ -3,6 +3,8 @@
  */
 package com.beyond.core.web.express;
 
+import static com.beyond.core.web.http.HttpHolder.Method.*;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -31,11 +33,11 @@ public class Express {
 	public String getExpressInfo(String express,String nu){
 		RequestParams param = new RequestParams();
 		param.setId(key).setCom(express).setNu(nu).setMuti("1").setShow("2").setOrder("desc");
-		Map<String, String> params = BeanMapConverter.beanToMap(param);
+		Map<String, Object> params = BeanMapConverter.beanToMap(param);
 		HttpHolder http = HttpHolder.instance();
 		HttpMethod method = null;
 		try {
-			method = http.executeGet(url, new HashMap<String, String>(), params);
+			method = http.execute(GET,url, new HashMap<String, String>(), params, new HashMap<String, String>());
 			return method.getResponseBodyAsString();
 		} catch (IOException e) {
 			throw new RuntimeException(e.getMessage());
@@ -52,11 +54,11 @@ public class Express {
 	@SuppressWarnings("unchecked")
 	public String getExpressInfo(RequestParams param){
 		
-		Map<String, String> params = BeanMapConverter.beanToMap(param);
+		Map<String, Object> params = BeanMapConverter.beanToMap(param);
 		HttpHolder http = HttpHolder.instance();
 		HttpMethod method = null;
 		try {
-			 method = http.executeGet(url, new HashMap<String, String>(), params);
+			 method = http.execute(GET,url, new HashMap<String, String>(), params, new HashMap<String, String>());
 			return method.getResponseBodyAsString();
 		} catch (IOException e) {
 			throw new RuntimeException(e.getMessage());
