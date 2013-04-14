@@ -3,6 +3,8 @@
  */
 package com.beyond.core.web.http;
 
+import static com.beyond.core.web.http.HttpHolder.Method.*;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -62,6 +64,14 @@ public class HttpHolderTest {
 			System.out.println(c.getName() + " : " + c.getValue());
 		}
 		client.addCookie(cookies[0]);
+	}
+	
+	@Test
+	public void test3() throws IOException{
+		HttpHolder client = HttpHolder.instance();
+		HttpMethod response = client.execute(GET, "http://www.baidu.com", new HashMap<String,String>(), new HashMap<String,Object>(), new HashMap<String,String>());
+		System.out.println(response.getResponseBodyAsString());
+		
 	}
 	class User{
 		
