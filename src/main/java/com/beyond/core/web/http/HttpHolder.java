@@ -17,9 +17,12 @@ import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.HttpState;
 import org.apache.commons.httpclient.NameValuePair;
+import org.apache.commons.httpclient.URI;
 import org.apache.commons.httpclient.cookie.CookiePolicy;
+import org.apache.commons.httpclient.methods.DeleteMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.methods.PutMethod;
 import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.commons.lang3.Validate;
 
@@ -69,11 +72,83 @@ public class HttpHolder {
 	
 	/**
 	 * 
+	 * @param method
+	 * @param url
+	 * @return
+	 */
+	public HttpMethod execute(Method method, String url){
+		return execute(method,url,new HashMap<String,String>(), new HashMap<String,Object>(), new HashMap<String,String>());
+	}
+
+	/**
+	 * 
+	 * @param method
+	 * @param url
+	 * @param headers
+	 * @param params
+	 * @return
+	 */
+	public HttpMethod execute(Method method, String url, Map<String, String> headers, Map<String, Object> params,Map<String,String> queryString) {
+		
+		HttpMethod httpMethod = method.getMethod();
+		try {
+			URI uri = new URI(url, true, "utf-8");
+			httpMethod.setURI(uri);
+			httpMethod.setParams(createParams(params));
+			httpMethod.setQueryString(createNameValuePair(queryString));
+			initHeader(httpMethod, headers);
+			client.executeMethod(httpMethod);
+		} catch (HttpException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return httpMethod;
+	}
+	
+	/**
+	 * 
+	 * @param method
+	 * @param url
+	 * @param clazz
+	 * @return
+	 */
+	public <T> T execute(Method method,String url,Class<T> clazz){
+		return execute(method, url,new HashMap<String,String>(), new HashMap<String,Object>(), new HashMap<String,String>(),clazz);
+	}
+	/**
+	 * 
+	 * @param method and enum
+	 * @param url
+	 * @param headers
+	 * @param params
+	 * @param clazz
+	 * @return
+	 */
+	public <T> T execute(Method method,String url,Map<String,String> headers,Map<String,Object> params,Map<String,String> queryString,Class<T> clazz){
+		
+		HttpMethod response = execute(method, url, headers, params,queryString);
+		String json = "";
+		try {
+			json = response.getResponseBodyAsString();
+		} catch (IOException e) {
+			throw new IOCommunicateException(e.getMessage());
+		}/*
+		 * finally{ releaseConnection(method); }
+		 */
+		return DocumentConverter.jsonToEntity(json, clazz);
+		
+	}
+
+	
+	/**
+	 * 
 	 * @param url
 	 * @param params
 	 * @param headers
 	 * @return
 	 */
+	@Deprecated
 	public HttpMethod executeGet(String url,Map<String,String> headers,Map<String,String> params){
 		Validate.notEmpty(url);
 		GetMethod get = new GetMethod(url);
@@ -88,6 +163,7 @@ public class HttpHolder {
 	 * @param url
 	 * @return
 	 */
+	@Deprecated
 	public HttpMethod executeGet(String url){
 		return executeGet(url, new HashMap<String, String>(), new HashMap<String, String>());
 	}
@@ -100,6 +176,7 @@ public class HttpHolder {
 	 * @param clazz
 	 * @return
 	 */
+	@Deprecated
 	public <T> T executeGet(String url,Map<String,String> headers,Map<String,String> params,Class<T> clazz){
 		GetMethod get = new GetMethod(url);
 		initHeader(get, headers);
@@ -114,6 +191,7 @@ public class HttpHolder {
 	 * @param clazz
 	 * @return
 	 */
+	@Deprecated
 	public <T> T executeGet(String url,Class<T> clazz){
 		return executeGet(url, new HashMap<String, String>(), new HashMap<String, String>(), clazz);
 	}
@@ -124,6 +202,7 @@ public class HttpHolder {
 	 * @param headers
 	 * @return
 	 */
+	@Deprecated
 	public HttpMethod executePost(String url,Map<String,String> headers,Map<String,Object> params){
 		
 		PostMethod post = new PostMethod(url);
@@ -137,6 +216,7 @@ public class HttpHolder {
 	 * @param url
 	 * @return
 	 */
+	@Deprecated
 	public HttpMethod executePost(String url){
 		return executePost(url, new HashMap<String, String>(), new HashMap<String, Object>());
 	}
@@ -149,6 +229,7 @@ public class HttpHolder {
 	 * @param clazz
 	 * @return
 	 */
+	@Deprecated
 	public <T> T executePost(String url,Map<String,String> headers,Map<String,Object> params,Class<T> clazz){
 		PostMethod post = new PostMethod(url);
 		initHeader(post, headers);
@@ -162,6 +243,7 @@ public class HttpHolder {
 	 * @param clazz
 	 * @return
 	 */
+	@Deprecated
 	public <T> T executePost(String url,Class<T> clazz){
 		return executePost(url,new HashMap<String, String>(),new HashMap<String, Object>(),clazz);
 	}
@@ -170,6 +252,7 @@ public class HttpHolder {
 	 * @param method 请求方法
 	 * @return
 	 */
+	@Deprecated
 	public HttpMethod execute(HttpMethod method){
 		try {
 			client.executeMethod(method);
@@ -190,6 +273,7 @@ public class HttpHolder {
 	 * @param clazz  要把response转换成的对象类型
 	 * @return
 	 */
+	@Deprecated
 	public <T> T execute(HttpMethod method,Class<T> clazz){
 		
 		HttpMethod response = execute(method);
@@ -259,5 +343,21 @@ public class HttpHolder {
 		if(null != method){
 			method.releaseConnection();
 		}
+	}
+	
+	static enum Method {
+
+		GET(new GetMethod()), POST(new PostMethod()), PUT(new PutMethod()), DELETE(new DeleteMethod());
+
+		private HttpMethod method;
+
+		private Method(HttpMethod _method) {
+			this.method = _method;
+		}
+
+		public HttpMethod getMethod() {
+			return method;
+		}
+
 	}
 }
